@@ -1,1 +1,110 @@
 学习笔记
+
+
+1. GC主要指令
+java -XX:+UseSerialGC -Xms512m -Xmx512m -Xloggc:gc.demo.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps GCLogAnalysis
+
+-Xloggc  日志写入文件
+-XX:+PrintGC   打印GC
+-XX:+PrintGCDetails  打印GC细节
+-XX:+PrintGCDateStamps  时间戳，可以看GC发生的时间点
+-XX:+UseAdaptiveSizePolicy 默认开启，后期会自动调节Survivor区的大小，取消自适应即可使得-XX:SurvivorRatio生效
+
+
+2.GCDetail阅读
+                             YoungGen： 116M 减少到 41M，总空间116736K   堆内存：374M -> 331M  用时：17ms
+[GC (Allocation Failure) [PSYoungGen: 116632K->41320K(116736K)] 374424K->331869K(466432K), 0.0174452 secs] [Times: user=0.04 sys=0.08, real=0.02 secs]
+Young减少了75M，但堆内存只减少了43M，说明Young区有数据转移到了Old区。
+
+                                                        OldGen：290M减少到236M，总空间349M
+[Full GC (Ergonomics) [PSYoungGen: 41320K->0K(116736K)] [ParOldGen: 290548K->236919K(349696K)] 331869K->236919K(466432K), [Metaspace: 2719K->2719K(1056768K)], 0.0354094 secs] [Times: user=0.19 sys=0.00, real=0.03 secs]
+
+
+Heap			YoungGen最大空间
+PSYoungGen      total 116736K, used 2745K [0x00000007b5580000, 0x00000007c0000000, 0x00000007c0000000)
+  eden space 58880K, 4% used [0x00000007b5580000,0x00000007b582e508,0x00000007b8f00000)
+  from space 57856K, 0% used [0x00000007b8f00000,0x00000007b8f00000,0x00000007bc780000)
+  to   space 57856K, 0% used [0x00000007bc780000,0x00000007bc780000,0x00000007c0000000)
+ParOldGen       total 349696K, used 329345K [0x00000007a0000000, 0x00000007b5580000, 0x00000007b5580000)
+  object space 349696K, 94% used [0x00000007a0000000,0x00000007b41a05f0,0x00000007b5580000)
+Metaspace       used 2726K, capacity 4486K, committed 4864K, reserved 1056768K
+  class space    used 296K, capacity 386K, committed 512K, reserved 1048576K
+
+
+
+
+3.YoungGC做了哪些事情？
+                             YoungGen： 116M 减少到 41M，总空间116736K   堆内存：374M 减少到 331M  用时：17ms
+[GC (Allocation Failure) [PSYoungGen: 116632K->41320K(116736K)] 374424K->331869K(466432K), 0.0174452 secs] [Times: user=0.04 sys=0.08, real=0.02 secs]
+1）Young区空间得到了释放；
+2）Young减少了75M，但堆内存只减少了43M，说明有32M数据从Young区转移到了Old区；
+
+
+4.YoungGC的频率和执行时间（JKD8默认ParallelGC）
+1）从DateStamps可以看出，随着YoungGC空间的减小，发生YoungGC的间隔由最初的大约50ms左右，逐渐缩短为大约20ms左右，甚至更短。
+  FullGC后，YoungGC被清空，发生YoungGC的时间间隔有增大到50ms左右；
+2）由于OldGen空间逐渐增大，导致YoungGC发生的间隔越来越小。
+  由最初，接近YoungGen最大空间时才触发GC -> 只用接近一半YoungGen空间就触发GC。因为从Young提升到Old的数据 + Old的数据 <  heap空间。
+  相应的YoungGC时间也有20ms左右 -> 3 ~ 5ms左右，因为从Young向Old搬移的数据量少了。
+
+
+5.OldGen的频率和执行时间（JKD8默认ParallelGC）
+1）随着OldGen空间越来越小，发生FullGC的频率越来越高。主要是因为数据从年轻代提升到老年代时，老年代空间不足，导致必须进行FullGC才能解决空间问题；
+
+
+6.堆内存空间逐渐增大对GC的影响（JKD8默认ParallelGC）
+512m -> 1g -> 2g
+1）YoungGC和FullGC次数都减少，特别是FullGC；
+2）由于YoungGen空间增加，YoungGC执行的时间也有所增加。因为一次YoungGC搬移的数据增多；
+
+2g ->  4g
+3）虽然FC次数减少很多，但每次执行时间增加较多，总吞吐量反而减少。
+所以堆空间不是越大越好，要选择一个合适的值。
+
+问题：
+如何给要上线的模块选择Xmx、Xms参数值？
+压测时，选择不同容量，打印GC信息。根据GC的频率和时间选一个最优值。是这样吗？
+
+
+7.UseAdaptiveSizePolicy 默认开启
+1）没有关闭自适应，再几次YoungGC后，YoungGen空间自动减小了。空间减小会导致YoungGC次数增加；
+2021-01-22T07:18:12.146-0800: [GC (Allocation Failure) [PSYoungGen: 305661K->43510K(305664K)] 495278K->305342K(1005056K),]
+2021-01-22T07:18:12.223-0800: [GC (Allocation Failure) [PSYoungGen: 305654K->43516K(305664K)] 567486K->381377K(1005056K),]
+																					空间减小了
+2021-01-22T07:18:12.302-0800: [GC (Allocation Failure) [PSYoungGen: 305660K->43518K(160256K)] 643521K->454529K(859648K), ]
+2）关闭自适应，GC数量有所减少，吞吐量增加；
+
+
+7.各种GC对比，选取 
+1）-Xms1g -Xmx1g
+ - java -Xms1g -Xmx1g -XX:-UseAdaptiveSizePolicy -XX:+PrintGC -XX:+UseSerialGC  GCLogAnalysis
+ 执行结束!共生成对象次数:10342
+ 
+ - java -XX:+UseParallelGC -Xms1g -Xmx1g -XX:-UseAdaptiveSizePolicy -XX:+PrintGC  GCLogAnalysis
+ 执行结束!共生成对象次数:11591
+ 
+ - java -Xms1g -Xmx1g -XX:-UseAdaptiveSizePolicy -XX:+PrintGC -XX:+UseConcMarkSweepGC  GCLogAnalysis
+ 执行结束!共生成对象次数:10411
+ 
+ - java -Xms1g -Xmx1g -XX:-UseAdaptiveSizePolicy -XX:+PrintGC -XX:+UseG1GC  GCLogAnalysis
+ 执行结束!共生成对象次数:11422
+ 
+ 堆空间1g时，Parallel和G1性能更好。
+ 
+ 2）-Xms2g -Xmx2g
+ - -XX:+UseSerialGC
+ 执行结束!共生成对象次数:10523，性能与1g相当
+ 
+ - -XX:+UseParallelGC
+ 执行结束!共生成对象次数:11875, 性能略有提升
+ 
+ - -XX:+UseConcMarkSweepGC 
+  执行结束!共生成对象次数:10552，性能与1g相当
+
+ - -XX:+UseG1GC
+执行结束!共生成对象次数:8291，性能较1g下降
+
+使用G1方式，堆空间要选好，否则对性能影响较大。
+
+
+

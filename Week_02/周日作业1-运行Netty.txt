@@ -53,7 +53,7 @@ Transfer/sec:  7.52MB
 每秒处理Requests数量减少了，是因为发送的请求数量减少导致？
 
 
-http03 : 
+2)http03 : 
 wrk -c 20 -d 30s -t 10 http://localhost:8803 
 10 threads and 20 connections
   6398 requests in 30.05s, 8.99MB read
@@ -64,7 +64,7 @@ Transfer/sec:    306.27KB
 每秒处理Requests数量减少，但Transfer却增加了，为什么？
 
 
-http02
+3)http02
 仍然没有成功处理请求数量
 
 
