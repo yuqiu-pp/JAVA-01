@@ -1,0 +1,76 @@
+
+
+1. 压测指令：wrk -c 40 -d 30s -t 10 http://localhost:8801
+
+1）http01/http02 成功Requests为0，结果如下：
+Running 30s test @ http://localhost:8801
+  10 threads and 40 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us     nan%
+    Req/Sec     0.00      0.00     0.00       nan%
+  0 requests in 30.09s, 0.00B read
+  Socket errors: connect 0, read 593560, write 0, timeout 0
+Requests/sec:      0.00
+Transfer/sec:       0.00B
+
+
+2）http03 结果如下
+Running 30s test @ http://localhost:8803
+  10 threads and 40 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.34ms   29.33ms 640.49ms   99.24%
+    Req/Sec    37.30     39.49   333.00     87.95%
+  8686 requests in 30.10s, 8.22MB read
+  Socket errors: connect 0, read 490523, write 17, timeout 1
+Requests/sec:    288.60
+Transfer/sec:    279.71KB
+
+
+3）Netty
+Running 30s test @ http://localhost:8808/test
+  10 threads and 40 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   589.46us  785.25us  47.39ms   97.49%
+    Req/Sec     7.57k     0.99k    9.43k    92.92%
+  2268307 requests in 30.10s, 235.79MB read
+Requests/sec:  75355.67
+Transfer/sec:  7.83MB
+
+Netty的Requests/sec数量高出太多了，简直是没法比。
+
+
+
+2. 改变压测数据
+
+1）降低connect数，40 -> 20
+Netty : 
+wrk -c 20 -d 30s -t 10 http://localhost:8808/test
+10 threads and 20 connections
+  2171791 requests in 30.01s, 225.76MB read
+Requests/sec:  72375.88
+Transfer/sec:  7.52MB
+
+每秒处理Requests数量减少了，是因为发送的请求数量减少导致？
+
+
+http03 : 
+wrk -c 20 -d 30s -t 10 http://localhost:8803 
+10 threads and 20 connections
+  6398 requests in 30.05s, 8.99MB read
+  Socket errors: connect 0, read 550834, write 14, timeout 0
+Requests/sec:    212.94
+Transfer/sec:    306.27KB
+
+每秒处理Requests数量减少，但Transfer却增加了，为什么？
+
+
+http02
+仍然没有成功处理请求数量
+
+
+
+
+
+
+
+
