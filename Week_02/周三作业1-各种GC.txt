@@ -1,1 +1,51 @@
 学习笔记
+
+7.各种GC对比 
+1）-Xms1g -Xmx1g
+ - java -Xms1g -Xmx1g -XX:-UseAdaptiveSizePolicy -XX:+PrintGC -XX:+UseSerialGC  GCLogAnalysis
+ 执行结束!共生成对象次数:10342
+ 
+ - java -XX:+UseParallelGC -Xms1g -Xmx1g -XX:-UseAdaptiveSizePolicy -XX:+PrintGC  GCLogAnalysis
+ 执行结束!共生成对象次数:11591
+ 
+ - java -Xms1g -Xmx1g -XX:-UseAdaptiveSizePolicy -XX:+PrintGC -XX:+UseConcMarkSweepGC  GCLogAnalysis
+ 执行结束!共生成对象次数:10411
+ 
+ - java -Xms1g -Xmx1g -XX:-UseAdaptiveSizePolicy -XX:+PrintGC -XX:+UseG1GC  GCLogAnalysis
+ 执行结束!共生成对象次数:11422
+ 
+ 堆空间1g时，Parallel和G1性能更好。
+ 
+ 2）-Xms2g -Xmx2g
+ - -XX:+UseSerialGC
+ 执行结束!共生成对象次数:10523，性能与1g相当
+ 
+ - -XX:+UseParallelGC
+ 执行结束!共生成对象次数:11875, 性能略有提升
+ 
+ - -XX:+UseConcMarkSweepGC 
+  执行结束!共生成对象次数:10552，性能与1g相当
+
+ - -XX:+UseG1GC
+执行结束!共生成对象次数:8291，性能较1g下降
+
+使用G1方式，堆空间要选好，否则对性能影响较大。
+
+
+
+ 3）-Xms4g -Xmx4g
+ - -XX:+UseSerialGC
+[GC (Allocation Failure)  1118528K->234234K(4054528K), 0.1341864 secs]
+[GC (Allocation Failure)  1352762K->391523K(4054528K), 0.1761094 secs]
+执行结束!共生成对象次数:8277。性能比1g、2g都低。GC时间较长。
+ 
+ - -XX:+UseParallelGC
+[GC (Allocation Failure)  1048576K->234415K(4019712K), 0.0939532 secs]
+[GC (Allocation Failure)  1282991K->357857K(4019712K), 0.1259524 secs]
+ 执行结束!共生成对象次数:9860。虽然只有两次GC，但性能略却下降了，因为每次执行GC时间较长，100ms左右。
+ 
+ - -XX:+UseConcMarkSweepGC 
+  执行结束!共生成对象次数:11548，性能比1g、2g都高一些。
+
+ - -XX:+UseG1GC
+执行结束!共生成对象次数:9694，性能小于1g，大于2g。
