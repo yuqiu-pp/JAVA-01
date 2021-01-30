@@ -22,8 +22,10 @@ Netty实现Http Client,请求Http03服务。
   不知道从哪里获取原始的Request。
 
 
-  2) channelRead中ctx.write(response);后
-  前端没收到响应。程序也主动跑哪了。
+  2) channelRead中ctx.write(response);后，
+  前端没收到响应。程序也不知跑哪了。
+
+
   不知道该如何调试？
 
 
