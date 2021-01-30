@@ -15,16 +15,16 @@ Netty实现Http Client,请求Http03服务。
 
 存在问题：
 
-1) Request的过滤不知该加到那？
+  1) Request的过滤不知该加到那？
 
-netty client直接通过f.channel().closeFuture().sync();连接Http服务器。
+  netty client直接通过f.channel().closeFuture().sync();连接Http服务器。
 
-不知道从哪里获取原始的Request。
+  不知道从哪里获取原始的Request。
 
 
-2）channelRead中ctx.write(response);后
-前端没收到响应。程序也主动跑哪了。
-不知道该如何调试？请老师指点一下。
+  2) channelRead中ctx.write(response);后
+  前端没收到响应。程序也主动跑哪了。
+  不知道该如何调试？
 
 
 ##2. okhttpclient
