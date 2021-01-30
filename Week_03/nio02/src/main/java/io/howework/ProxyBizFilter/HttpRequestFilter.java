@@ -1,4 +1,4 @@
-package io.howework.ProxyBizFilter;
+package io.howework.proxyBizFilter;
 
 import io.netty.handler.codec.http.FullHttpRequest;
 

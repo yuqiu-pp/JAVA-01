@@ -48,10 +48,10 @@ public class HttpInboundHandler extends ChannelInboundHandlerAdapter {
             // handler.handle(fullRequest, ctx, filter);
 
             // 使用OkHttpClient
-            // okHttpOutboundHandler.okHttpHandler(fullRequest, ctx);
+            okHttpOutboundHandler.okHttpHandler(fullRequest, ctx, proxyServer);
 
             // 使用NettyHttpClient
-            nettyHttpClientOutboundHandler.nettyHttpHandler(fullRequest, ctx);
+            // nettyHttpClientOutboundHandler.nettyHttpHandler(fullRequest, ctx);
 
         } catch(Exception e) {
             e.printStackTrace();

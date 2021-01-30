@@ -1,7 +1,7 @@
 package io.howework.outbound.nettyclient;
 
-import io.howework.ProxyBizFilter.BodyHttpResponseFilter;
-import io.howework.ProxyBizFilter.HeaderHttpResponseFilter;
+import io.howework.proxyBizFilter.BodyHttpResponseFilter;
+import io.howework.proxyBizFilter.HeaderHttpResponseFilter;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

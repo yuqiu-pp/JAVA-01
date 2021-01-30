@@ -1,7 +1,9 @@
 package io.howework.outbound.okhttpclient;
 
 
-import io.howework.ProxyBizFilter.HeaderHttpResponseFilter;
+import io.howework.proxyBizFilter.HeaderHttpRequestFilter;
+import io.howework.proxyBizFilter.HeaderHttpResponseFilter;
+import io.howework.router.RandomHttpEndpointRouter;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
@@ -10,6 +12,7 @@ import io.netty.handler.codec.http.FullHttpResponse;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.util.List;
 
 import static io.netty.handler.codec.http.HttpResponseStatus.NO_CONTENT;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
@@ -21,15 +24,23 @@ public class OkHttpOutboundHandler {
             = MediaType.get("application/json; charset=utf-8");
 
        public static HeaderHttpResponseFilter headerHttpResponseFilter = new HeaderHttpResponseFilter();
+       public static RandomHttpEndpointRouter randomHttpEndpointRouter = new RandomHttpEndpointRouter();
+       private static HeaderHttpRequestFilter headerHttpRequestFilter = new HeaderHttpRequestFilter();
 
-       public void okHttpHandler(FullHttpRequest fullHttpRequest, ChannelHandlerContext ctx) {
+       public void okHttpHandler(FullHttpRequest fullHttpRequest, ChannelHandlerContext ctx, List<String> proxyServer) {
            // 组路由新url
-           String url = "http://127.0.0.1:8801" + fullHttpRequest.getUri();
+           // String url = "http://127.0.0.1:8801" + fullHttpRequest.getUri();
+           String url = getServerAddr(proxyServer) + fullHttpRequest.uri();
 
            // request filter
+            headerHttpRequestFilter.filter(fullHttpRequest);
 
            // 作为cline请求http server
            fetchGet(fullHttpRequest, ctx, url);
+       }
+
+       public String getServerAddr(List<String> proxyServer) {
+            return randomHttpEndpointRouter.router(proxyServer);
        }
 
        public void fetchGet(FullHttpRequest fullHttpRequest, ChannelHandlerContext ctx, String url) {
