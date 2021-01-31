@@ -1,15 +1,15 @@
 
 作业说明
 
-#1.homework/ProxyBizFilter
+# 1.homework/ProxyBizFilter
 
 Request和Response的通用过滤接口和实现类。
 
   .
 
-#2.homeowrk/outbound
+# 2.homeowrk/outbound
 
-  ##1. nettyclient
+  ## 1. nettyclient
 
   Netty实现Http Client,请求Http03服务。
 
@@ -27,14 +27,14 @@ Request和Response的通用过滤接口和实现类。
     不知道该如何调试？
 
 
-  ##2. okhttpclient
+  ## 2. okhttpclient
 
   OkHttpClient实现了转发请求到Http03服务，且数据可以正常返回给前端。
 
   实现了Request和Response的过滤，已经路由。
 
 
-#2.homeowrk/router
+# 2.homeowrk/router
 
 路由接口和随机路由实现。
 
