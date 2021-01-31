@@ -5,9 +5,13 @@
 
 Request和Response的通用过滤接口和实现类。
 
-  .
 
-# 2.homeowrk/outbound
+# 2.homeowrk/router
+
+路由接口和随机路由实现。
+
+
+# 3.homeowrk/outbound
 
   ## 1） nettyclient
 
@@ -34,9 +38,6 @@ Request和Response的通用过滤接口和实现类。
   实现了Request和Response的过滤，已经路由。
 
 
-# 2.homeowrk/router
-
-路由接口和随机路由实现。
 
 
 
