@@ -35,7 +35,7 @@ Request和Response的通用过滤接口和实现类。
 
   OkHttpClient实现了转发请求到Http03服务，且数据可以正常返回给前端。
 
-  实现了Request和Response的过滤，已经路由。
+  实现了Request和Response的过滤，已经随机路由。
 
 
 
