@@ -12,6 +12,7 @@ Request和Response的通用过滤接口和实现类。
 
 
 # 3.homeowrk/outbound
+转发Request功能实现。
 
   ## 1） nettyclient
 
