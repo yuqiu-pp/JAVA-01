@@ -21,7 +21,6 @@
 ```
 
 ###### 4、（必做）把多线程和并发相关知识梳理一遍，画一个脑图
-![image](https://github.com/yuqiu-pp/JAVA-01/blob/main/Week_04/multi_thread.png)
 ```
 multi_thread.xmind
 ```
