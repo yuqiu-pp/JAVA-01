@@ -9,20 +9,18 @@ dynamicproxyAOP
   缺点：只能实现接口的代理；
 - CGLib动态代理
   优点：原理是创建原始类的子类，所以没有接口的限制
-
 ```
 
 ###### 2、（必做）写代码实现 Spring Bean 的装配，方式越多越好（XML、Annotation 都可以）
 ```
-x
+beanloader/MyBeanFactory/xml
+- BeanFactoryByXml.java 解析xml，生成bean实例，放入容器
+
+
 
 
 ```
 
-###### 3、（选做）实现一个 Spring XML 自定义配置，配置一组 Bean，例如：Student/Klass/School。
-```
-m
-```
 
 
 ## 第10课
@@ -38,14 +36,17 @@ singleton
 
 ```
 
-###### 2、（必做）写代码实现 Spring Bean 的装配，方式越多越好（XML、Annotation 都可以）
+###### 3、（必做）给前面课程提供的 Student/Klass/School 实现自动配置和 Starter。
 ```
-x
+.
 
 
 ```
 
-###### 3、（选做）实现一个 Spring XML 自定义配置，配置一组 Bean，例如：Student/Klass/School。
+###### 6、（必做）研究一下 JDBC 接口和数据库连接池，掌握它们的设计和用法：
+ 1）使用 JDBC 原生接口，实现数据库的增删改查操作。
+ 2）使用事务，PrepareStatement 方式，批处理方式，改进上述操作。
+ 3）配置 Hikari 连接池，改进上述操作
 ```
-m
+.
 ```
