@@ -1,0 +1,82 @@
+
+CREATE TABLE `user_info` (
+  `id` bigint(20) NOT NULL COMMENT 'snowflake',
+  `user_mobile` varchar(11) CHARACTER SET latin1 NOT NULL COMMENT '手机号作为user唯一标识',
+  `user_name` varchar(32) CHARACTER SET latin1 NOT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `remark` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+
+CREATE TABLE `user_password` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `user_pwd` varchar(256) CHARACTER SET latin1 NOT NULL COMMENT 'sha1+salt加密',
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `remark` varchar(256) CHARACTER SET latin1 DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_user_id` (`user_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+
+CREATE TABLE `user_account` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `balance` decimal(9,2) DEFAULT NULL COMMENT '用户平台余额',
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `remark` varchar(256) CHARACTER SET latin1 DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_user_id` (`user_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+
+CREATE TABLE `user_account_transaction` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `amount` decimal(9,2) DEFAULT 0.00,
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `opening_balance` decimal(10,0) DEFAULT NULL COMMENT '期初余额',
+  `closing_balance` decimal(10,0) DEFAULT NULL COMMENT '期末余额',
+  `serial_num` bigint(20) DEFAULT NULL COMMENT '交易流水号',
+  `order_id` bigint(20) DEFAULT NULL,
+  `remark` varchar(256) CHARACTER SET latin1 DEFAULT 'NULL',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_user_id` (`user_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+
+CREATE TABLE `user_order` (
+  `id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `order_id` bigint(20) NOT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `remark` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_user_id` (`user_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+
+CREATE TABLE `user_address` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `province` varchar(24) CHARACTER SET latin1 DEFAULT NULL,
+  `city` varchar(24) CHARACTER SET latin1 DEFAULT NULL,
+  `district` varchar(24) CHARACTER SET latin1 DEFAULT NULL,
+  `room_num` varchar(128) CHARACTER SET latin1 DEFAULT NULL,
+  `remark` varchar(256) CHARACTER SET latin1 DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_user_id` (`user_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+
+
+CREATE TABLE `user_shopping_cart` (
+  `id` int(11) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `goods_id` bigint(20) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `remark` varchar(256) CHARACTER SET latin1 DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_user_id` (`user_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
