@@ -26,9 +26,9 @@ public class UserControllerForTest {
     @ReadOnly
     @GetMapping("/getUsers")
     public List<User> getUsers() {
-        DynamicDataSourceContextHolder.setContextKey(DataSourceType.SLAVE.name());
+        // DynamicDataSourceContextHolder.setContextKey(DataSourceType.SLAVE.name());
         List<User> users = userService.queryUser();
-        DynamicDataSourceContextHolder.removeContextKey();
+        // DynamicDataSourceContextHolder.removeContextKey();
         return users;
     }
 }

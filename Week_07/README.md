@@ -31,6 +31,9 @@ multidatasource / dynamicsource
 ├─mapper --------  
 ├─service -------  
 
+3) 支持配置多个从库
+
+4）支持多个从库负载均衡
 
 ```
 

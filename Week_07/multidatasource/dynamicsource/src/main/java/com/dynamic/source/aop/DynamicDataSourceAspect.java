@@ -12,6 +12,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
+import java.util.Random;
 
 @Aspect
 @Component
@@ -23,12 +24,31 @@ public class DynamicDataSourceAspect {
     // 方法执行前设置slave，执行后恢复
     @Around("dataSourcePointCut()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-        DynamicDataSourceContextHolder.setContextKey(DataSourceType.SLAVE.name());
+        // DynamicDataSourceContextHolder.setContextKey(DataSourceType.SLAVE.name());
+        // TODO 放在这里做负载均衡是否合适？
+        DynamicDataSourceContextHolder.setContextKey(randomeDataSource());
         try {
             return joinPoint.proceed();
         } finally {
             DynamicDataSourceContextHolder.removeContextKey();
         }
+    }
+
+    private String randomeDataSource() {
+        String res = "";
+        Random random = new Random();
+        int s = random.nextInt(2);
+        System.out.println(s);
+        switch (s) {
+            case 0:
+                res = DataSourceType.SLAVE01.name();
+                break;
+            case 1:
+                res = DataSourceType.SLAVE02.name();
+                break;
+        }
+
+        return res;
     }
 
     private Method getTargetMethod(ProceedingJoinPoint joinPoint) throws NoSuchMethodException {

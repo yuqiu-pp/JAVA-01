@@ -29,9 +29,15 @@ public class DynamicDataSourceConfig {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean("slave")
-    @ConfigurationProperties(prefix = "spring.datasource.slave")
-    public DataSource slaveDataSource() {
+    @Bean("slave01")
+    @ConfigurationProperties(prefix = "spring.datasource.slave01")
+    public DataSource slaveDataSource01() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean("slave02")
+    @ConfigurationProperties(prefix = "spring.datasource.slave02")
+    public DataSource slaveDataSource02() {
         return DataSourceBuilder.create().build();
     }
 
@@ -39,9 +45,10 @@ public class DynamicDataSourceConfig {
     // TODO 使用注解 Primary， 优先dynamicDataSource()获取数据源
     @Primary
     public DataSource dynamicDataSource() {
-        Map<Object, Object> dataSourceMap = new HashMap<>(2);
+        Map<Object, Object> dataSourceMap = new HashMap<>(3);
         dataSourceMap.put(DataSourceType.MASTER.name(), masterDataSource());
-        dataSourceMap.put(DataSourceType.SLAVE.name(), slaveDataSource());
+        dataSourceMap.put(DataSourceType.SLAVE01.name(), slaveDataSource01());
+        dataSourceMap.put(DataSourceType.SLAVE02.name(), slaveDataSource02());
 
         DynamicDataSource dynamicDataSource = DynamicDataSource.getInstance();
         dynamicDataSource.setDefaultTargetDataSource(masterDataSource());
