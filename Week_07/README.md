@@ -32,8 +32,9 @@ multidatasource / dynamicsource
 ├─service -------  
 
 3) 支持配置多个从库
-
 4）支持多个从库负载均衡
+在aop切面的around中增加随机选择数据源。
+这里做负载均衡是否合适？
 
 ```
 
