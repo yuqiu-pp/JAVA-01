@@ -4,6 +4,32 @@
 
 ###### 2、（必做）读写分离-动态切换数据源版本1.0
 ```
+multidatasource / manualsource
+1) 配置两个数据源，master支持写，slave只读
+├─config ----------- // 数据源配置
+├─service -------    // 注入两个数据源对应的Mapper
+├─entity ----------- // 实体类
+│ ├─master
+│ └─slave
+├─mapper ----------- 
+│ ├─master
+│ └─slave
+
+|─resources ----------- 
+│ ├─mapper  
+│   ├─master
+│   └─slave
+
+2）基于操作 AbstractRoutingDataSource 和自定义注解 readOnly
+multidatasource / dynamicsource
+
+├─annotation ---- // 自定义注解 @ReadOnly
+├─aop ----------- // 切换slave数据源
+├─config -------- // 数据源配置。 路由策略：线程上下文获取设置的数据源
+├─context ------- // ThreadLocal保存数据源上下文
+├─entity -------- 
+├─mapper --------  
+├─service -------  
 
 
 ```
@@ -18,7 +44,7 @@ spring:
     datasource:
       names: ds-master, ds-slave-1, ds-slave-2
 
-  	masterslave:
+    masterslave:
       name: ms
       master-data-source-name: ds-master
       slave-data-source-names: ds-slave-1, ds-slave-2
