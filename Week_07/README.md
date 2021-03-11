@@ -42,6 +42,15 @@ multidatasource / dynamicsource
 ```
 shardingspherejdbc / springspherejdbc
 
+├─annotation ---- // 自定义注解 @ForceReadMaster
+├─aop ----------- // 强制读主AOP
+├─config -------- // 数据源配置。 路由策略：线程上下文获取设置的数据源
+├─controller ------- 
+├─entity -------- 
+├─mapper --------  
+├─service -------  // 强制读主service
+
+
 yaml文件设置数据源
 spring:
   shardingsphere:

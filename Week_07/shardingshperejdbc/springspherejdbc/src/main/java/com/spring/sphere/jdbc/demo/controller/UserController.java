@@ -23,4 +23,9 @@ public class UserController {
     public List<User> getUsers() {
         return userService.queryUser();
     }
+
+    @GetMapping("/getUsersFromMaster")
+    public List<User> queryUserFromMaster() {
+        return userService.queryUserFromMaster();
+    }
 }
