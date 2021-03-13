@@ -9,4 +9,6 @@ public interface UserService {
     int saveUser(User user);
 
     List<User> queryUser();
+
+    public List<User> queryUserFromMaster();
 }
