@@ -1,11 +1,21 @@
 CREATE TABLE `order_info` (
-  `id` bigint(20) NOT NULL COMMENT '商品id.  snowflake',
-  `goods_id` bigint(20) DEFAULT NULL,
+  `id` bigint NOT NULL COMMENT '商品id.  snowflake',
+  `goods_id` bigint NOT NULL,
   `goods_price` decimal(10,0) DEFAULT NULL,
-  `goods_num` int(11) DEFAULT NULL,
-  `order_status` varchar(255) CHARACTER SET latin1 DEFAULT NULL COMMENT '创建成功，未支付、已支付、待发货、已发货、已送达、退货申请提交、退货进行中、退货完成、订单结束',
+  `goods_num` int DEFAULT NULL,
+  `order_status` int DEFAULT NULL COMMENT '创建成功，未支付、已支付、待发货、已发货、已送达、退货申请提交、退货进行中、退货完成、订单结束',
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
+  `user_id` bigint DEFAULT NULL,
+  `user_address_id` bigint DEFAULT NULL,
+  `deliver_id` bigint DEFAULT NULL,
+  `total_amt` int DEFAULT NULL COMMENT '总金额',
   PRIMARY KEY (`id`),
   KEY `index_goods_id` (`goods_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+
+
+CREATE TABLE `order_deliver_info` (
+  `id` bigint NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='快递信息表'
